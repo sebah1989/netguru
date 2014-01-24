@@ -19,21 +19,23 @@ class Post
   end
 
   def hotness
-    passed_time = (Time.now - self.created_at.to_time)/86400.0
-    at_least_3_comments = self.comments.count >= 3
-    
-    if passed_time <= 1
-      return 4 if at_least_3_comments
-      3
-    elsif passed_time > 1 && passed_time <= 3
-      return 3 if at_least_3_comments
-      2
-    elsif passed_time > 3 && passed_time <= 7
-      return 2 if at_least_3_comments
-      1
+    if check_is_date_in_range?(24.hour.ago, Time.now)
+      has_at_least_3_comments? ? 4 : 3
+    elsif check_is_date_in_range?(72.hour.ago, 24.hour.ago)
+      has_at_least_3_comments? ? 3 : 2
+    elsif check_is_date_in_range?(7.day.ago, 3.day.ago)
+      has_at_least_3_comments? ? 2 : 1
     else
-      return 1 if at_least_3_comments
-      0
+      has_at_least_3_comments? ? 1 : 0
     end  
+  end
+
+  private
+  def check_is_date_in_range?(start_date, end_date)
+    (start_date..end_date).cover?(self.created_at)
+  end
+
+  def has_at_least_3_comments?
+    self.comments.count >= 3
   end
 end
