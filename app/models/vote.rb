@@ -11,6 +11,6 @@ class Vote
 
   protected
   def check_comment
-  	self.comment.check_abusive
+  	comment.check_abusive
   end
 end
