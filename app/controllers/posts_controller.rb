@@ -9,7 +9,8 @@ class PostsController < ApplicationController
       Comment.where(post_id: post.id, abusive: false)
     end
   end
-  expose(:tag_cloud) { [] }
+
+  expose(:tag_cloud) { Post.tags_with_weight }
 
   def index
   end
