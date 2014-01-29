@@ -21,8 +21,17 @@ class Comment
   end
 
   def vote_up(user_id)
+    vote(user_id, 1)
+  end
+
+  def vote_down(user_id)
+    vote(user_id, -1)
+  end
+
+  private
+  def vote(user_id, value)
     if votes.where({ user_id: user_id }).count == 0
-      votes.create({ value: 1, user_id: user_id })
+      votes.create({ value: value, user_id: user_id })
     end
   end
 end

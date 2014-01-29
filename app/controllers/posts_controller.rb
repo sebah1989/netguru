@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   before_filter :authenticate_user!
   expose_decorated(:posts) { Post.all }
   expose_decorated(:post, attributes: :post_params)
-  expose_decorated(:comments) do 
+  expose(:comments) do 
     if current_user.owner? post
       Comment.where(post_id: post.id)
     else
