@@ -1,18 +1,36 @@
 class CommentsController < ApplicationController
-  before_action :find_comment
+  expose(:post)
+  expose(:comments, ancestor: :post) 
+  expose(:comment, attributes: :comment_params)
+  expose(:vote_comment) { post.comments.find(params[:id]) }
+
+  def new
+  end
+
+  def create
+    if comment.save
+      redirect_to post_path(post)
+    end
+  end
   
 	def mark_as_not_abusive
-		@comment.mark_as_not_abusive
-		render "posts/show"
+	  vote_comment.mark_as_not_abusive
+		redirect_to post
 	end
 
 	def vote_up
-		@comment.vote_up(current_user.id)
-    render "posts/show"
+		vote_comment.vote_up(current_user.id)
+    redirect_to post
 	end
+
+  def vote_down
+    vote_comment.vote_down(current_user.id)
+    redirect_to post
+  end
   
   private
-	def find_comment
-		@comment = Comment.find(params[:id])
-	end
+
+  def comment_params
+    params.require(:comment).permit!#(:body, :post_id)
+  end
 end

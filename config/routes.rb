@@ -6,11 +6,12 @@ Easyblog::Application.routes.draw do
     member do
       post :mark_archived
     end
-  end
-  resources :comments do
-  	member do
-      post :mark_as_not_abusive
-      post :vote_up
+    resources :comments do
+      member do
+        post :mark_as_not_abusive
+        post :vote_up
+        post :vote_down
+      end
     end
   end
 end

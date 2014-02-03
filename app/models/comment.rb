@@ -7,11 +7,11 @@ class Comment
 
   belongs_to :user
   belongs_to :post
-  has_many :votes
+  has_many :votes, dependent: :destroy
 
   def check_abusive
-    votes = self.votes.inject(0) {|sum, vote| sum += 1 if vote.value == -1}
-    if votes && votes >= 3
+    check_votes = votes.inject(0) {|sum, vote| sum += 1 if vote.value == -1}
+    if check_votes && check_votes >= 3
       update_attributes({ abusive: true })
     end
   end
@@ -30,7 +30,7 @@ class Comment
 
   private
   def vote(user_id, value)
-    if votes.where({ user_id: user_id }).count == 0
+    unless votes.where({ user_id: user_id }).any?
       votes.create({ value: value, user_id: user_id })
     end
   end
